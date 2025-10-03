@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FastFood Store</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Project2.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        .search-form {
+            position: relative;
+            max-width: 400px;
+        }
+
+            .search-form input {
+                padding-right: 40px;
+            }
+
+            .search-form button {
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                border: none;
+                background: transparent;
+                color: #6c757d;
+            }
+
+                .search-form button:hover {
+                    color: #495057;
+                }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="SanPham" asp-action="Index">
+                    <img src="~/images/logo.png" alt="FastFood Logo" style="width:50px; height:auto; margin-right:0px;">
+                    FastFood Store
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="SanPham" asp-action="Index">Sản phẩm</a>
+                        </li>
+                    </ul>
+
+                    <!-- Thanh tìm kiếm sản phẩm -->
+                    <form class="d-flex search-form mx-3" asp-controller="SanPham" asp-action="Index" method="get">
+                        <div class="position-relative w-100">
+                            <input class="form-control"
+                                   type="search"
+                                   name="searchString"
+                                   placeholder="Tìm kiếm sản phẩm..."
+                                   aria-label="Search"
+                                   value="@ViewData["CurrentFilter"]">
+                            <button class="btn" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <ul class="navbar-nav">
+                        @if (string.IsNullOrEmpty(Context.Session.GetString("UserId")))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="TaiKhoan" asp-action="DangNhap">
+                                    <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="TaiKhoan" asp-action="DangKi">
+                                    <i class="fas fa-user-plus"></i> Đăng ký
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="GioHang" asp-action="Index">
+                                    <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="DonHang" asp-action="Index">
+                                    <i class="fas fa-receipt"></i> Đơn hàng
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user"></i> @Context.Session.GetString("UserName")
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @if (Context.Session.GetString("UserRole")?.ToLower() == "admin")
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Admin" asp-action="Index">
+                                                <i class="fas fa-cog"></i> Quản trị
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="TaiKhoan" asp-action="DangXuat">
+                                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="admin-footer mt-5">
+        <div class="container-fluid">
+            <div class="row text-center text-md-start">
+                <!-- Logo & giới thiệu -->
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold text-primary">
+                        <i class="fas fa-utensils"></i> FastFood Store
+                    </h5>
+                    <p class="text-muted small">
+                        Hệ thống quản lý bán đồ ăn nhanh hiện đại, dễ sử dụng và hiệu quả.
+                    </p>
+                </div>
+
+                @* <!-- Liên kết nhanh -->
+                <div class="col-md-4 mb-3">
+                <h6 class="fw-bold">Liên kết nhanh</h6>
+                <ul class="list-unstyled">
+                <li><a href="@Url.Action("Index", "Admin")">Dashboard</a></li>
+                <li><a href="@Url.Action("Index", "AdminSanPham")">Quản lý sản phẩm</a></li>
+                <li><a href="@Url.Action("Index", "AdminDonHang")">Quản lý đơn hàng</a></li>
+                <li><a href="@Url.Action("Index", "AdminTaiKhoan")">Quản lý tài khoản</a></li>
+                </ul>
+                </div> *@
+
+                <!-- Liên hệ -->
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold">Liên hệ</h6>
+                    <p class="text-muted small mb-1"><i class="fas fa-envelope"></i> support@fastfoodstore.com</p>
+                    <p class="text-muted small mb-1"><i class="fas fa-phone"></i> +84 123 456 789</p>
+                    <p class="text-muted small"><i class="fas fa-map-marker-alt"></i> Hà Nội, Việt Nam</p>
+                </div>
+            </div>
+
+            <hr>
+            <div class="text-center small text-muted">
+                © @DateTime.Now.Year FastFood Store. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
