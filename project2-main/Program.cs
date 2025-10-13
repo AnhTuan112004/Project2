@@ -8,7 +8,7 @@ builder.Services.AddControllersWithViews();
 
 // Add Entity Framework
 builder.Services.AddDbContext<WebBanDoAnNhanhContext>(options =>
-    options.UseSqlServer("Server=LAPTOP-KNT8DC45;Database=Web_ban_do_an_nhanh;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True"));
+    options.UseSqlServer("Server=AnhTuan\\MSSQLSERVER_DEV;Database=Web_ban_do_an_nhanh;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True"));
 
 // Add Session support - QUAN TRỌNG!
 builder.Services.AddDistributedMemoryCache();
